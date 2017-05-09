@@ -14,7 +14,7 @@ class MyStreamListener(tweepy.StreamListener):
         self.db = self.client.twitter
 
     def on_status(self, status):
-        print(status._json)
+        print(status.id)
         self.save(status._json)
 
     def on_error(self, status_code):
@@ -27,4 +27,4 @@ class MyStreamListener(tweepy.StreamListener):
 
     async def do_insert(self, document):
         result = await self.db.stream.insert_one(document)
-        print('result %s' % repr(result.inserted_id))
+        # print('result %s' % repr(result.inserted_id))
