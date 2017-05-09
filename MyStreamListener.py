@@ -10,7 +10,7 @@ class MyStreamListener(tweepy.StreamListener):
         super().__init__()
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
-        self.client = motor.motor_asyncio.AsyncIOMotorClient(io_loop=self.loop)
+        self.client = motor.motor_asyncio.AsyncIOMotorClient('localhost', 52912, io_loop=self.loop)
         self.db = self.client.twitter
 
     def on_status(self, status):
