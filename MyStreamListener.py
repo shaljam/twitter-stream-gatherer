@@ -26,5 +26,5 @@ class MyStreamListener(tweepy.StreamListener):
         self.loop.run_until_complete(self.do_insert(tweet))
 
     async def do_insert(self, document):
-        result = await self.db.test_collection.insert_one(document)
+        result = await self.db.stream.insert_one(document)
         print('result %s' % repr(result.inserted_id))
