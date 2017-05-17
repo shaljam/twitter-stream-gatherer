@@ -25,7 +25,7 @@ class MyStreamListener(tweepy.StreamListener):
 
         if len(files) > 0:
             last = max(files)
-            self.file_number = int(last[last.find('t.') + 1:last.rfind('.')]) + 1
+            self.file_number = int(last[last.find('t.') + 2:last.rfind('.')]) + 1
 
             path = '{}{}'.format(base_path, str(self.file_number).zfill(10))
 
