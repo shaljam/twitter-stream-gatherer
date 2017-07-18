@@ -1,5 +1,5 @@
 import tweepy
-import motor.motor_asyncio
+# import motor.motor_asyncio
 import asyncio
 import gzip
 import json
@@ -18,8 +18,8 @@ class MyStreamListener(tweepy.StreamListener):
         super().__init__()
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
-        self.client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://twitter:kjashzi1SKzajzXI!33@localhost:52912/twitter', io_loop=self.loop)
-        self.db = self.client.twitter
+        # self.client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://twitter:kjashzi1SKzajzXI!33@localhost:52912/twitter', io_loop=self.loop)
+        # self.db = self.client.twitter
 
         files = glob.glob('{}*.gz'.format(base_path))
 
@@ -44,6 +44,7 @@ class MyStreamListener(tweepy.StreamListener):
     def on_error(self, status_code):
         if status_code == 420:
             # returning False in on_data disconnects the stream
+            print('RECEIVED ERROR STATUS CODE: {}'.format(status_code))
             return False
 
     def save(self, tweet):
