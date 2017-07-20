@@ -47,6 +47,9 @@ class MyStreamListener(tweepy.StreamListener):
             print('RECEIVED ERROR STATUS CODE: {}'.format(status_code))
             return False
 
+    def on_limit(self, track):
+        print('LIMIT REACHED WITH TRACK: {}'.format(track))
+
     def save(self, tweet):
         self.loop.run_until_complete(self.do_insert(tweet))
 
