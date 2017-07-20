@@ -1,22 +1,37 @@
 import tweepy
 import MyStreamListener
+import json
 
-auth = tweepy.OAuthHandler('kIpQuw1LxS4DgatGEB0NwZfAm', 'a8r7hgRMNdqb2xxmhcWanzYg1FN6DgTpS4iANiA0lyos47fdQZ')
-auth.set_access_token('2380084197-h1uU4twPIGIIrB3NqzQxW8yIhNswwKJwwsfsYzy', 'dKc5cZavlqBKqGmnA9kJM0WbWZfNuqFtwz8yPTyBvSgQX')
+
+config_path = 'config.json'
+config = None
+
+
+def load_config():
+    global config
+
+    with open(config_path) as config_file:
+        config = json.load(config_file)
+
+    print('config loaded from {}'.format(config_path))
+
+
+load_config()
+
+auth = tweepy.OAuthHandler(config['consumer_key'], config['consumer_secret'])
+auth.set_access_token(config['access_token_key'], config['access_token_secret'])
 
 api = tweepy.API(auth)
 
 myStreamListener = MyStreamListener.MyStreamListener()
 myStream = tweepy.Stream(auth=api.auth, listener=myStreamListener)
 
-# myStream.filter(track=['مالیات', 'فقر', 'فقیر', 'قالیباف', 'خالیباف', 'جهانگیری', 'پلاسکو', 'شهرداری', 'آستان قدس',
-#                        'جمهوری', 'رای', 'انتخاب', 'رئیسی', 'میرسلیم', 'روحانی', 'هاشمی طبا', 'رشد اقتصادی',
-#                        'امام رضا', 'انتخابات', 'موسوی', 'کروبی', 'حصر', 'کار', 'اشتغال', 'کرامت', 'وعده',
-#                        'خاتمی', 'رفسنجانی', 'شغل', 'برنامه', 'دولت', 'ایران', 'رئیس‌جمهور', 'رئیس جمهور',
-#                        'رهبر', 'انقلاب', 'رأی', 'ماليات', 'نتایج', 'اعتراض', 'تقلب', 'اول', 'دوم', 'سوم', 'دوازدهمین',
-#                        'دوازدهم', 'اصلاحطلب', 'اصلاح‌طلب', 'اصلاح طلب', 'اصولگرا', 'شورای شهر', 'لیست', 'تهران', 'اقوام',
-#                        'زنان', 'وزارت کشور', '۹۶', 'برجام', 'ارتباطات بانکی', 'توریسم', 'توریست', 'عادی سازی',
-#                        'روابط خارجی', 'کارگر', 'اقتصاد', 'ورزش', 'سیاست', 'شورای نگهبان', 'حوزه', 'بیت', 'حقوق',
-#                        'یارانه', 'مجلس', 'قانون', 'شورا', 'جوان', 'ریاست', 'شهر', 'کشور'], async=True)
-
-myStream.sample(languages=['fa'], async=True)
+if config['filter_or_sample'] == 'filter':
+    track_str = config['track']
+    print(len(track_str.split()))
+    track = list({item for item in track_str.split()})
+    print(len(track))
+    print(track)
+    myStream.filter(track=track, languages=['fa'], async=True)
+else:
+    myStream.sample(languages=['fa'], async=True)

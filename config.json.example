@@ -1,0 +1,8 @@
+{
+    "consumer_key": "your key",
+    "consumer_secret": "your secret",
+    "access_token_key": "",
+    "access_token_secret": "",
+    "filter_or_sample": "filter",
+    "track": "از به تا"
+}
