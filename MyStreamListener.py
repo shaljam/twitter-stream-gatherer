@@ -21,11 +21,17 @@ class MyStreamListener(tweepy.StreamListener):
         # self.client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://twitter:kjashzi1SKzajzXI!33@localhost:52912/twitter', io_loop=self.loop)
         # self.db = self.client.twitter
 
-        files = glob.glob('{}*.gz'.format(base_path))
+        # !!! base_path already contains t.
+        files = glob.glob('{}*'.format(base_path))
 
         if len(files) > 0:
             last = max(files)
-            self.file_number = int(last[last.find('t.') + 2:last.rfind('.')]) + 1
+            add_to_file_number = 0
+            if last.endswith('.gz'):
+                last = last[:-3]
+                add_to_file_number = 1
+
+            self.file_number = int(last[last.find('t.') + 2:]) + add_to_file_number
 
             path = '{}{}'.format(base_path, str(self.file_number).zfill(10))
 
