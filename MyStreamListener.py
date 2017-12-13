@@ -5,6 +5,7 @@ import gzip
 import json
 import glob
 import shutil
+import datetime
 from os import remove
 from pathlib import Path
 
@@ -54,7 +55,8 @@ class MyStreamListener(tweepy.StreamListener):
             return False
 
     def on_limit(self, track):
-        print('LIMIT REACHED WITH TRACK: {}'.format(track))
+        print('LIMIT REACHED WITH TRACK: {} on {}'
+              .format(track, datetime.datetime.now().strftime('%A, %b %d, %Y %H:%M:%S')))
 
     def save(self, tweet):
         self.loop.run_until_complete(self.do_insert(tweet))
