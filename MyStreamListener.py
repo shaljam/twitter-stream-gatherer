@@ -1,26 +1,26 @@
 import tweepy
-# import motor.motor_asyncio
 import asyncio
 import gzip
 import json
 import glob
 import shutil
 import datetime
+import time
+from threading import Thread
 from os import remove
 from pathlib import Path
+
 
 base_path = './data/t.'
 
 
-# override tweepy.StreamListener to add logic to on_status
 class MyStreamListener(tweepy.StreamListener):
 
     def __init__(self):
         super().__init__()
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
-        # self.client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://twitter:kjashzi1SKzajzXI!33@localhost:52912/twitter', io_loop=self.loop)
-        # self.db = self.client.twitter
+        self.running = True
 
         # !!! base_path already contains t.
         files = glob.glob('{}*'.format(base_path))
@@ -44,19 +44,27 @@ class MyStreamListener(tweepy.StreamListener):
             self.file_number = 1
             self.count = 0
 
+        self.received_count = 0
+        self.last_received_count = 0
+        self.rate_calc_time = time.time()
+        self.start_time = time.time()
+        self.start_timer()
+
     def on_status(self, status):
-        print(status.id)
         self.save(json.dumps(status._json))
 
+        return self.running
+
     def on_error(self, status_code):
-        if status_code == 420:
-            # returning False in on_data disconnects the stream
-            print('RECEIVED ERROR STATUS CODE: {}'.format(status_code))
-            return False
+        print('RECEIVED ERROR STATUS CODE: {}'.format(status_code))
+
+        return self.running
 
     def on_limit(self, track):
         print('LIMIT REACHED WITH TRACK: {} on {}'
               .format(track, datetime.datetime.now().strftime('%A, %b %d, %Y %H:%M:%S')))
+
+        return self.running
 
     def save(self, tweet):
         self.loop.run_until_complete(self.do_insert(tweet))
@@ -85,3 +93,31 @@ class MyStreamListener(tweepy.StreamListener):
             remove(file_path)
 
             self.file_number += 1
+
+        self.received_count += 1
+
+    def timer(self):
+        while self.running:
+            now = time.time()
+            current_received = self.received_count
+            rate = (current_received - self.last_received_count) / (now - self.rate_calc_time)
+            overall_rate = self.received_count / (now - self.start_time)
+
+            running_time = datetime.timedelta(seconds=int(now - self.start_time))
+
+            print('{:.2f} t/s\t overall {:.2f} t/s\t running for {}\t total {}'
+                  .format(rate, overall_rate, running_time, current_received))
+
+            self.rate_calc_time = now
+            self.last_received_count = current_received
+
+            if not self.running:
+                return
+
+            time.sleep(60)
+
+    def start_timer(self):
+        t = Thread(target=self.timer)
+        t.setDaemon(True)
+        t.start()
+
