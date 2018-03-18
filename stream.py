@@ -58,6 +58,8 @@ def gather():
             print('ReadTimeoutError occurred on {}. Will print stacktrace...'.format(beautiful_now()))
             print(traceback.format_exc())
 
+            my_stream_listener.running = False
+
             time.sleep(10)
 
 
