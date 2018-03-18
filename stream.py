@@ -1,5 +1,5 @@
 import tweepy
-import json
+import ujson
 import urllib3
 import traceback
 import time
@@ -22,8 +22,8 @@ my_stream_listener = None
 def load_config():
     global config
 
-    with open(config_path) as config_file:
-        config = json.load(config_file)
+    with open(config_path, encoding='utf-8') as config_file:
+        config = ujson.load(config_file)
 
     print('config loaded from {}'.format(config_path))
 
