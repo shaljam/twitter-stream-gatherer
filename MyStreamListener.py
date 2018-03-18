@@ -74,6 +74,9 @@ class MyStreamListener(tweepy.StreamListener):
         # result = await self.db.stream.insert_one(document)
         # print('result %s' % repr(result.inserted_id))
 
+        document = '{}, "received_timestamp_ms": {}{}'\
+            .format(document[:-1], int(datetime.datetime.now().timestamp() * 1e3), '}')
+
         with open('{}{}'.format(base_path, str(self.file_number).zfill(10)), 'at', encoding='utf-8') as f:
             f.write(document + '\n')
             f.close()
