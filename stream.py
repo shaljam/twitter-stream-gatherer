@@ -54,8 +54,8 @@ def gather():
                 my_stream.sample(languages=['fa'])
 
             break
-        except urllib3.exceptions.ReadTimeoutError:
-            print('ReadTimeoutError occurred on {}. Will print stacktrace...'.format(beautiful_now()))
+        except urllib3.exceptions.HTTPError:
+            print('HTTPError occurred on {}. Will print stacktrace...'.format(beautiful_now()))
             print(traceback.format_exc())
 
             my_stream_listener.running = False
