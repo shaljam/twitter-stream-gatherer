@@ -9,6 +9,7 @@ import time
 from threading import Thread
 from os import remove
 from pathlib import Path
+from utils import beautiful_now
 
 
 base_path = './data/t.'
@@ -105,8 +106,8 @@ class MyStreamListener(tweepy.StreamListener):
 
             running_time = datetime.timedelta(seconds=int(now - self.start_time))
 
-            print('{:.2f} t/s\t overall {:.2f} t/s\t running for {}\t total {}'
-                  .format(rate, overall_rate, running_time, current_received))
+            print('{}: {:.2f} t/s\t overall {:.2f} t/s\t running for {}\t total {}'
+                  .format(beautiful_now(), rate, overall_rate, running_time, current_received))
 
             self.rate_calc_time = now
             self.last_received_count = current_received
