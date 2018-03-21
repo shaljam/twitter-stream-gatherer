@@ -4,5 +4,6 @@
     "access_token_key": "",
     "access_token_secret": "",
     "filter_or_sample": "filter",
-    "track": "از به تا"
+    "track": "از به تا",
+    "ids_path": "tweet_ids_only.txt"
 }
