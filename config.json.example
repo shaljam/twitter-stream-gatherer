@@ -5,5 +5,7 @@
     "access_token_secret": "",
     "filter_or_sample": "filter",
     "track": "از به تا",
-    "ids_path": "tweet_ids_only.txt"
+    "ids_path": "tweet_ids_only.txt",
+    "delay_length": 5,
+    "user_login": true
 }
