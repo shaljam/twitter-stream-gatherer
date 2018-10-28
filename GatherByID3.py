@@ -15,7 +15,7 @@ import tweepy
 
 from utils import beautiful_now
 
-base_path = './data/t.'
+base_path = './data/i.'
 processed_count_path = 'processed_count'
 file_number = 1
 count = 0
@@ -48,7 +48,7 @@ if len(files) > 0:
         last = last[:-3]
         add_to_file_number = 1
 
-    file_number = int(last[last.find('t.') + 2:]) + add_to_file_number
+    file_number = int(last[last.find('i.') + 2:]) + add_to_file_number
 
     path = '{}{}'.format(base_path, str(file_number).zfill(10))
 
