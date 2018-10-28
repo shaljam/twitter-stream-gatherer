@@ -1,0 +1,6 @@
+urllib3
+requests
+ujson
+uvloop
+pytz
+tweepy

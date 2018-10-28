@@ -1,15 +1,17 @@
-import tweepy
-import ujson
-import urllib3
-import traceback
-import time
 import asyncio
-import uvloop
-import signal
 import functools
+import signal
+import time
+import traceback
+import ujson
+
+import requests
+import tweepy
+import urllib3
+import uvloop
+
 import MyStreamListener
 from utils import beautiful_now
-
 
 print('{}\thi there!'.format(beautiful_now()))
 
@@ -54,8 +56,8 @@ def gather():
                 my_stream.sample(languages=['fa'])
 
             break
-        except urllib3.exceptions.HTTPError:
-            print('HTTPError occurred on {}. Will print stacktrace...'.format(beautiful_now()))
+        except (urllib3.exceptions.HTTPError, requests.exceptions.ConnectionError) as e:
+            print(f'HTTPError or ConnectionError occurred on {beautiful_now()}. Will print stacktrace...')
             print(traceback.format_exc())
 
             my_stream_listener.running = False
