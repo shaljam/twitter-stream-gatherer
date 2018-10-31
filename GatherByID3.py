@@ -183,6 +183,7 @@ signal.signal(signal.SIGTERM, exit_gracefully)
 with open(ids_path) as f:
     ids = []
     batch_count = 0
+    bst = time.time()
 
     # skip processed count and continue to the end
     pc = processed_count
@@ -195,6 +196,14 @@ with open(ids_path) as f:
 
         if batch_count < 100:
             continue
+
+        time_to_wait = 1.0001 - (time.time() - bst)
+
+        if time_to_wait > 0:
+            # print(f'sleeping {time_to_wait}')
+            time.sleep(time_to_wait)
+
+        bst = time.time()
 
         results = api.statuses_lookup(id_=ids, include_entities=True, map_=False)
         save_results_to_file(results, batch_count)
