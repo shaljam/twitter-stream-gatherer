@@ -6,6 +6,7 @@ import json
 import shutil
 import signal
 import time
+import traceback
 import ujson
 from os import remove
 from pathlib import Path
@@ -203,10 +204,21 @@ with open(ids_path) as f:
             # print(f'sleeping {time_to_wait}')
             time.sleep(time_to_wait)
 
-        bst = time.time()
+        error_count = 0
+        while error_count < 5:
+            bst = time.time()
 
-        results = api.statuses_lookup(id_=ids, include_entities=True, map_=False)
-        save_results_to_file(results, batch_count)
+            try:
+                results = api.statuses_lookup(id_=ids, include_entities=True, map_=False)
+                save_results_to_file(results, batch_count)
+                break
+            except tweepy.TweepError:
+                error_count += 1
+                print(f'TweepError happend\n{traceback.format_exc()}')
+                continue
+        else:
+            print(f'many errors happened, will exit')
+            exit(1)
 
         ids.clear()
         batch_count = 0
